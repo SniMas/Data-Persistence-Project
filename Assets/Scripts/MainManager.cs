@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -17,6 +18,8 @@ public class MainManager : MonoBehaviour
     private int m_Points;
     
     private bool m_GameOver = false;
+
+    public Text globalScoreText;
 
     
     // Start is called before the first frame update
@@ -36,6 +39,7 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+        RefreshRecord();
     }
 
     private void Update()
@@ -71,6 +75,21 @@ public class MainManager : MonoBehaviour
     public void GameOver()
     {
         m_GameOver = true;
+
+        GameManager.Instance.playerData.playerScore = m_Points;
+
+        if (GameManager.Instance.playerData.playerScore > GameManager.Instance.recordData.playerScore)
+        {
+            GameManager.Instance.SaveRecord();
+        }
+
+        RefreshRecord();
         GameOverText.SetActive(true);
     }
+
+    void RefreshRecord()
+    {
+        globalScoreText.text = "Record: " + GameManager.Instance.recordData.playerName + ": " + GameManager.Instance.recordData.playerScore;
+    }
+
 }
